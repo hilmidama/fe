@@ -2,8 +2,13 @@ import "./App.css";
 
 import React, { useState, useEffect } from "react";
 import { Button, TextField, Grid, Container, Divider } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import { decrement, increment, incrementByAmount } from "./store/user";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { incrementByAmount } from "./store/user";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 
 function App() {
   const [email, setemail] = useState("");
@@ -16,7 +21,7 @@ function App() {
   const [user, setUser] = useState({ email: "", fullname: "", dateofbirth: "", phone: "", address: "", password: "" });
 
   // const count = useSelector((state) => state.counter.user[0]);
-  // const { users } = useSelector((state) => state.users);
+  const users = useSelector((state) => state.counter.user);
   const dispatch = useDispatch();
 
   const onEmailChange = (e) => setemail(e.target.value);
@@ -24,7 +29,7 @@ function App() {
     setfullname(e.target.value);
   };
 
-  const user2 = useSelector((state) => state.counter.user);
+  // const user2 = useSelector((state) => state.counter.user);
   const onSubmit = async () => {
     setUser({ ...user, fullname: fullname, email: email, dateofbirth: dateofbirth, phone: phone, address: address, password: password });
   };
@@ -33,6 +38,11 @@ function App() {
   const onAddressChange = (e) => setaddress(e.target.value);
   const onPasswordChange = (e) => setpassword(e.target.value);
 
+  const bull = (
+    <Box component="span" sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}>
+      •
+    </Box>
+  );
   // const handleSubmit = () => console.log(textValue);
   // const handleReset = () => setTextValue("");
   useEffect(() => {
@@ -119,7 +129,35 @@ function App() {
         label={"Search Anything"} //optional
       />
 
-      {user}
+      <Grid container direction="row">
+        {users.map(({ fullname, email, address, phone, password, dateofbirth }) => {
+          return (
+            <Grid xs={3}>
+              <Card sx={{ minWidth: 275 }}>
+                <CardContent>
+                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    Hi, My name is {fullname}
+                  </Typography>
+                  <Typography variant="h5" component="div">
+                    be{bull}nev{bull}o{bull}lent
+                  </Typography>
+                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    adjective
+                  </Typography>
+                  <Typography variant="body2">
+                    well meaning and kindly.
+                    <br />
+                    {'"a benevolent smile"'}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Learn More</Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          );
+        })}
+      </Grid>
     </Container>
   );
 }
