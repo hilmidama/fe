@@ -15,9 +15,6 @@ function App() {
 
   const [user, setUser] = useState({ email: "", fullname: "", dateofbirth: "", phone: "", address: "", password: "" });
 
-  useEffect(() => {
-    dispatch(incrementByAmount(user));
-  }, [user]);
   // const count = useSelector((state) => state.counter.user[0]);
   // const { users } = useSelector((state) => state.users);
   const dispatch = useDispatch();
@@ -27,6 +24,7 @@ function App() {
     setfullname(e.target.value);
   };
 
+  const user2 = useSelector((state) => state.counter.user);
   const onSubmit = async () => {
     setUser({ ...user, fullname: fullname, email: email, dateofbirth: dateofbirth, phone: phone, address: address, password: password });
   };
@@ -37,7 +35,9 @@ function App() {
 
   // const handleSubmit = () => console.log(textValue);
   // const handleReset = () => setTextValue("");
-
+  useEffect(() => {
+    dispatch(incrementByAmount(user));
+  }, [user]);
   return (
     <Container>
       <Grid container direction="column">
@@ -118,6 +118,8 @@ function App() {
         value={password}
         label={"Search Anything"} //optional
       />
+
+      {user}
     </Container>
   );
 }

@@ -3,11 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 const slice = createSlice({
   name: "users",
   initialState: {
-    users: [],
+    user: [],
   },
   reducers: {
     incrementByAmount: (state, action) => {
-      state.users.push(action.payload);
+      console.log(action);
+      state.user.push(action.payload);
     },
   },
 });
