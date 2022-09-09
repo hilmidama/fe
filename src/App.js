@@ -19,7 +19,7 @@ function App() {
     dispatch(incrementByAmount(user));
   }, [user]);
   // const count = useSelector((state) => state.counter.user[0]);
-  const { users } = useSelector((state) => state.users);
+  // const { users } = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
   const onEmailChange = (e) => setemail(e.target.value);

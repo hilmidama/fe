@@ -6,19 +6,11 @@ const slice = createSlice({
     users: [],
   },
   reducers: {
-    getUsers: (state, action) => {
-      state.users = action.payload;
+    incrementByAmount: (state, action) => {
+      state.users.push(action.payload);
     },
   },
 });
+export const { increment, decrement, incrementByAmount } = slice.actions;
 
-const { usersSuccess } = slice.actions;
-
-export const fetchUsers = () => async (dispatch) => {
-  try {
-    await api.get("/users").then((response) => dispatch(usersSuccess(response.data)));
-  } catch (e) {
-    return console.error(e.message);
-  }
-};
 export default slice.reducer;
