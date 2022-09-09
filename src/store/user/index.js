@@ -7,11 +7,14 @@ const slice = createSlice({
   },
   reducers: {
     incrementByAmount: (state, action) => {
-      console.log(action);
+      console.log("as");
       state.user.push(action.payload);
+    },
+    clear: (state) => {
+      state.user = [];
     },
   },
 });
-export const { increment, decrement, incrementByAmount } = slice.actions;
+export const { clear, incrementByAmount } = slice.actions;
 
 export default slice.reducer;

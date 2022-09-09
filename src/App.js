@@ -1,14 +1,48 @@
 import "./App.css";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, TextField, Grid, Container, Divider } from "@mui/material";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
-import { incrementByAmount } from "./store/user";
+import { incrementByAmount, clear } from "./store/user";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import SwipeableViews from "react-swipeable-views";
+import { useTheme } from "@mui/material/styles";
+import AppBar from "@mui/material/AppBar";
+import Tabs from "@mui/material/Tabs";
+import PropTypes from "prop-types";
+import Tab from "@mui/material/Tab";
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+  console.log(value);
+
+  return (
+    <div role="tabpanel" hidden={value !== index} id={`full-width-tabpanel-${index}`} aria-labelledby={`full-width-tab-${index}`} {...other}>
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `full-width-tab-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
+  };
+}
 
 function App() {
   const [email, setemail] = useState("");
@@ -17,6 +51,15 @@ function App() {
   const [phone, setphone] = useState("");
   const [address, setaddress] = useState("");
   const [password, setpassword] = useState("");
+  const theme = useTheme();
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
 
   const [user, setUser] = useState({ email: "", fullname: "", dateofbirth: "", phone: "", address: "", password: "" });
 
@@ -27,6 +70,10 @@ function App() {
   const onEmailChange = (e) => setemail(e.target.value);
   const onFullNameChange = (e) => {
     setfullname(e.target.value);
+  };
+
+  const clearAll = () => {
+    dispatch(clear());
   };
 
   // const user2 = useSelector((state) => state.counter.user);
@@ -43,10 +90,15 @@ function App() {
       •
     </Box>
   );
-  // const handleSubmit = () => console.log(textValue);
-  // const handleReset = () => setTextValue("");
+  const isInitialMount = useRef(true);
+
   useEffect(() => {
-    dispatch(incrementByAmount(user));
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      // Your useEffect code here to be run on update
+      dispatch(incrementByAmount(user));
+    }
   }, [user]);
   return (
     <Container>
@@ -120,7 +172,7 @@ function App() {
 
       <Divider></Divider>
       <Grid container direction="row" justifyContent="center" alignItems="center">
-        <Button> clear all list user </Button>
+        <Button onClick={clearAll}> clear all list user </Button>
       </Grid>
       <TextField
         margin="dense"
@@ -151,7 +203,26 @@ function App() {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small">Learn More</Button>
+                  <Box sx={{ bgcolor: "background.paper", width: 500 }}>
+                    <AppBar position="static">
+                      <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth" aria-label="full width tabs example">
+                        <Tab label="Item One" {...a11yProps(0)} />
+                        <Tab label="Item Two" {...a11yProps(1)} />
+                        <Tab label="Item Three" {...a11yProps(2)} />
+                      </Tabs>
+                    </AppBar>
+                    {/* <SwipeableViews axis={theme.direction === "rtl" ? "x-reverse" : "x"} index={value} onChangeIndex={handleChangeIndex}>
+                      <TabPanel value={value} index={0} dir={theme.direction}>
+                        Item One
+                      </TabPanel>
+                      <TabPanel value={value} index={1} dir={theme.direction}>
+                        Item Two
+                      </TabPanel>
+                      <TabPanel value={value} index={2} dir={theme.direction}>
+                        Item Three
+                      </TabPanel>
+                    </SwipeableViews> */}
+                  </Box>
                 </CardActions>
               </Card>
             </Grid>
