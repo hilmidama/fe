@@ -15,6 +15,8 @@ import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import PropTypes from "prop-types";
 import Tab from "@mui/material/Tab";
+import { Avatar } from "@mui/material";
+import axios from "axios";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -53,6 +55,7 @@ function App() {
   const [password, setpassword] = useState("");
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const [get, setGet] = useState("");
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -90,7 +93,28 @@ function App() {
       •
     </Box>
   );
+
+  const onAutoGenerate = async () => {
+    setGet(2);
+  };
   const isInitialMount = useRef(true);
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      // Your useEffect code here to be run on update
+      axios.get("https://randomuser.me/api").then((response) => {
+        console.log(response.data.results[0]);
+        let name = response.data.results[0].name.title + " " + response.data.results[0].name.first + " " + response.data.results[0].name.last;
+        let email = response.data.results[0].email;
+        let date = response.data.results[0].dob.date;
+        let phone = response.data.results[0].phone;
+        let address = response.data.results[0].location.city;
+        let password = response.data.results[0].login.password;
+        setUser({ ...user, fullname: name, email: email, dateofbirth: date, phone: phone, address: address, password: password });
+      });
+    }
+  }, [get]);
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -165,7 +189,7 @@ function App() {
           </Grid>
 
           <Grid item xs={8}>
-            <Button>Auto Generate</Button>
+            <Button onClick={onAutoGenerate}>Auto Generate</Button>
           </Grid>
         </Grid>
       </Grid>
@@ -186,22 +210,14 @@ function App() {
           return (
             <Grid xs={3}>
               <Card sx={{ minWidth: 275 }}>
-                <CardContent>
-                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    Hi, My name is {fullname}
-                  </Typography>
-                  <Typography variant="h5" component="div">
-                    be{bull}nev{bull}o{bull}lent
-                  </Typography>
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    adjective
-                  </Typography>
-                  <Typography variant="body2">
-                    well meaning and kindly.
-                    <br />
-                    {'"a benevolent smile"'}
-                  </Typography>
-                </CardContent>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <CardContent>
+                    <Avatar sx={{ width: 150, height: 150 }}>H</Avatar>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                      Hi, My name is {fullname}
+                    </Typography>
+                  </CardContent>
+                </div>
                 <CardActions>
                   <Box sx={{ bgcolor: "background.paper", width: 500 }}>
                     <AppBar position="static">

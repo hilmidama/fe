@@ -7,7 +7,6 @@ const slice = createSlice({
   },
   reducers: {
     incrementByAmount: (state, action) => {
-      console.log("as");
       state.user.push(action.payload);
     },
     clear: (state) => {
